@@ -125,9 +125,13 @@ public class FBAppEventsLoggerModule extends ReactContextBaseJavaModule {
     }
 
     @Override
-    public void initialize() {
-        mAppEventLogger = AppEventsLogger.newLogger(mReactContext);
-        mAttributionIdentifiers = AttributionIdentifiers.getAttributionIdentifiers(mReactContext);
+    public void initialize() {        
+        try {
+            mAppEventLogger = AppEventsLogger.newLogger(mReactContext);
+            mAttributionIdentifiers = AttributionIdentifiers.getAttributionIdentifiers(mReactContext);
+        } catch (RuntimeException ex) {
+
+        }
     }
 
     @Override
