@@ -58,21 +58,25 @@ public class FBAccessTokenModule extends ReactContextBaseJavaModule {
     @Override
     public void initialize() {
         super.initialize();
-        accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                try {
-                    mReactContext
-                            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                            .emit(CHANGE_EVENT_NAME, currentAccessToken == null ? null : Utility.accessTokenToReactMap(currentAccessToken));
-                } catch (RuntimeException ex) {
-                    // It is possible that the react context might not have initialized when this
-                    // event is broadcasted from AccessTokenTracker, so rather than crashing with
-                    // an error message, ignoring the change
-                }
-            }
-        };
 
+        try {
+            accessTokenTracker = new AccessTokenTracker() {
+                @Override
+                protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                    try {
+                        mReactContext
+                                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                .emit(CHANGE_EVENT_NAME, currentAccessToken == null ? null : Utility.accessTokenToReactMap(currentAccessToken));
+                    } catch (RuntimeException ex) {
+                        // It is possible that the react context might not have initialized when this
+                        // event is broadcasted from AccessTokenTracker, so rather than crashing with
+                        // an error message, ignoring the change
+                    }
+                }
+            };
+        } catch (RuntimeException ex) {
+
+        }
     }
 
     @Override
